@@ -1,47 +1,54 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../redux/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+
 function Login() {
-  let emailRef = useRef();
-  let passwordRef = useRef();
+  const [errors, setErrors] = useState({});
+  const emailRef = useRef();
+  const passwordRef = useRef();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const email = emailRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
+    const newErrors = {};
+
+    if (!email) {
+      newErrors.email = "Email không được để trống";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email không hợp lệ";
+    }
+
+    if (!password) {
+      newErrors.password = "Mật khẩu không được để trống";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const submitLogin = (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     const baseUrl = process.env.REACT_APP_API_URL;
-    let url = `${baseUrl}/login`;
-    let form = {
+    const url = `${baseUrl}/login`;
+    const form = {
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
 
-    const email = emailRef.current.value.trim();
-    const password = passwordRef.current.value.trim();
-    if (!email) {
-      alert("Email không được để trống");
-      emailRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      alert("Email không hợp lệ");
-      emailRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (!password) {
-      alert("Mật khẩu không được để trống");
-      passwordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    let opt = {
+    const opt = {
       method: "post",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
     };
+
     fetch(url, opt)
       .then((res) => {
         if (!res.ok) {
@@ -57,9 +64,13 @@ function Login() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        alert("Bạn sai tài khoản hoặc mật khẩu");
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          general: "Bạn sai tài khoản hoặc mật khẩu",
+        }));
       });
   };
+
   return (
     <div className="container d-flex justify-content-center align-items-center ">
       <div className="row justify-content-center w-100 m-5">
@@ -70,7 +81,7 @@ function Login() {
             </div>
             <div className="card-body p-4">
               <form onSubmit={submitLogin}>
-                <div className="mb-3">
+                <div className="mb-4">
                   <label htmlFor="email" className="form-label">
                     Tài khoản email
                   </label>
@@ -86,6 +97,9 @@ function Login() {
                       ref={emailRef}
                     />
                   </div>
+                  {errors.email && (
+                    <div className="text-danger fs-6">{errors.email}</div>
+                  )}
                 </div>
                 <div className="mb-4">
                   <label htmlFor="password" className="form-label">
@@ -103,6 +117,9 @@ function Login() {
                       ref={passwordRef}
                     />
                   </div>
+                  {errors.password && (
+                    <div className="text-danger fs-6">{errors.password}</div>
+                  )}
                 </div>
                 <button type="submit" className="btn btn-primary w-100">
                   Đăng nhập
@@ -126,4 +143,5 @@ function Login() {
     </div>
   );
 }
+
 export default Login;

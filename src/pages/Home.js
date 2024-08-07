@@ -83,7 +83,7 @@ const Home = () => {
                       onClick={() => dispatch(addProduct(pro))}
                       className="add-cart"
                     >
-                      + Add To Cart
+                      + Mua Ngay
                     </a>
                     <p className="desc line-clamp">{pro.des}</p>
                     <h5>{Number(pro.price_sale).toLocaleString("vi")} VND</h5>

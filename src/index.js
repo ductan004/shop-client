@@ -82,7 +82,7 @@ root.render(
         </Route>
       </Routes>
       <ToastContainer
-        position="bottom-right"
+        position="top-left"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,45 +6,47 @@ import { toast } from "react-toastify";
 const ChangePassword = () => {
   const user = useSelector((state) => state.auth.user);
 
+  const [errors, setErrors] = useState({});
   const oldPasswordRef = useRef();
   const newPasswordRef = useRef();
-  const confirmpasswordRef = useRef();
+  const confirmPasswordRef = useRef();
 
-  const submitChangePass = async (e) => {
-    e.preventDefault();
+  const validateForm = () => {
+    const newErrors = {};
     const oldPassword = oldPasswordRef.current.value.trim();
     const newPassword = newPasswordRef.current.value.trim();
-    const confirmpassword = confirmpasswordRef.current.value.trim();
+    const confirmPassword = confirmPasswordRef.current.value.trim();
 
     if (!oldPassword) {
-      alert("Mật khẩu hiện tại không được để trống");
-      oldPasswordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
+      newErrors.oldPassword = "Mật khẩu hiện tại không được để trống";
     }
 
     if (!newPassword) {
-      alert("Mật khẩu mới không được để trống");
-      newPasswordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
+      newErrors.newPassword = "Mật khẩu mới không được để trống";
     }
 
-    if (!confirmpassword) {
-      alert("Mật khẩu nhập lại không được để trống");
-      confirmpasswordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Mật khẩu nhập lại không được để trống";
+    } else if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword =
+        "Mật khẩu mới và xác nhận mật khẩu không khớp";
     }
 
-    if (newPassword !== confirmpassword) {
-      alert("Mật khẩu mới và xác nhận mật khẩu không khớp");
-      return;
-    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const submitChangePass = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
 
     const form = {
-      oldPassword: oldPassword,
-      newPassword: newPassword,
+      oldPassword: oldPasswordRef.current.value.trim(),
+      newPassword: newPasswordRef.current.value.trim(),
     };
 
-    let opt = {
+    const opt = {
       method: "PUT",
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" },
@@ -59,17 +61,19 @@ const ChangePassword = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-
         toast.success("Đổi mật khẩu thành công");
       } else {
-        const errorData = await response.json();
-        alert(errorData.message);
+        toast.error("Mật khẩu hiện tại không đúng");
       }
+      oldPasswordRef.current.value = "";
+      newPasswordRef.current.value = "";
+      confirmPasswordRef.current.value = "";
     } catch (error) {
       console.error("Error:", error);
-      alert("Đã có lỗi xảy ra!");
+      toast.error("Đã có lỗi xảy ra!");
     }
   };
+
   return (
     <div className="container d-flex justify-content-center align-items-center">
       <div className="row justify-content-center w-100 m-5">
@@ -81,7 +85,7 @@ const ChangePassword = () => {
             <div className="card-body p-4">
               <form onSubmit={submitChangePass}>
                 <div className="mb-3">
-                  <label htmlFor="currentPassword" className="form-label">
+                  <label htmlFor="oldPassword" className="form-label">
                     Mật khẩu hiện tại
                   </label>
                   <div className="input-group">
@@ -92,10 +96,13 @@ const ChangePassword = () => {
                       ref={oldPasswordRef}
                       type="password"
                       className="form-control"
-                      id="currentPassword"
+                      id="oldPassword"
                       placeholder="Nhập mật khẩu hiện tại"
                     />
                   </div>
+                  {errors.oldPassword && (
+                    <div className="text-danger mt-2">{errors.oldPassword}</div>
+                  )}
                 </div>
                 <div className="mb-3">
                   <label htmlFor="newPassword" className="form-label">
@@ -113,9 +120,12 @@ const ChangePassword = () => {
                       placeholder="Nhập mật khẩu mới"
                     />
                   </div>
+                  {errors.newPassword && (
+                    <div className="text-danger mt-2">{errors.newPassword}</div>
+                  )}
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="confirmNewPassword" className="form-label">
+                  <label htmlFor="confirmPassword" className="form-label">
                     Nhập lại mật khẩu mới
                   </label>
                   <div className="input-group">
@@ -123,13 +133,18 @@ const ChangePassword = () => {
                       <i className="fas fa-lock"></i>
                     </span>
                     <input
-                      ref={confirmpasswordRef}
+                      ref={confirmPasswordRef}
                       type="password"
                       className="form-control"
-                      id="confirmNewPassword"
+                      id="confirmPassword"
                       placeholder="Nhập lại mật khẩu mới"
                     />
                   </div>
+                  {errors.confirmPassword && (
+                    <div className="text-danger mt-2">
+                      {errors.confirmPassword}
+                    </div>
+                  )}
                 </div>
                 <button type="submit" className="btn btn-primary w-100">
                   Đổi mật khẩu

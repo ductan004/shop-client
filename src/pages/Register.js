@@ -1,71 +1,65 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Register = () => {
+  const [errors, setErrors] = useState({});
   const fullNameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const confirmpasswordRef = useRef();
+  const confirmPasswordRef = useRef();
   const phoneRef = useRef();
+
+  const validateForm = () => {
+    const newErrors = {};
+    const fullName = fullNameRef.current.value.trim();
+    const email = emailRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
+    const confirmPassword = confirmPasswordRef.current.value.trim();
+    const phone = phoneRef.current.value.trim();
+
+    if (!fullName) {
+      newErrors.fullName = "Họ và tên không được để trống";
+    }
+
+    if (!email) {
+      newErrors.email = "Email không được để trống";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email không hợp lệ";
+    }
+
+    if (!password) {
+      newErrors.password = "Mật khẩu không được để trống";
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Nhập lại mật khẩu không được để trống";
+    } else if (confirmPassword !== password) {
+      newErrors.confirmPassword = "Nhập lại mật khẩu không trùng với mật khẩu";
+    }
+
+    if (!phone) {
+      newErrors.phone = "Không được để trống";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const submitRegister = async (e) => {
     e.preventDefault();
 
-    const fullName = fullNameRef.current.value.trim();
-    const email = emailRef.current.value.trim();
-    const password = passwordRef.current.value.trim();
-    const confirmpasswor = confirmpasswordRef.current.value.trim();
-    const phone = phoneRef.current.value.trim();
-
-    if (!fullName) {
-      alert("Họ và tên không được để trống");
-      fullNameRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (!email) {
-      alert("Email không được để trống");
-      emailRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      alert("Email không hợp lệ");
-      emailRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (!password) {
-      alert("Mật khẩu không được để trống");
-      passwordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (!confirmpasswor) {
-      alert("Nhập lại mật khẩu không được để trống");
-      confirmpasswordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (!phone) {
-      alert("Số điện thoại không được để trống");
-      phoneRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
-
-    if (confirmpasswor !== password) {
-      alert("Nhập lại mật khẩu không trùng với mật khẩu");
-      confirmpasswordRef.current.focus(); // Đưa con trỏ chuột đến trường có lỗi
-      return; // Dừng việc gửi form nếu có lỗi
-    }
+    if (!validateForm()) return;
 
     const user = {
-      fullName: fullName,
-      email: email,
-      password: password,
-      phone: phone,
+      fullName: fullNameRef.current.value.trim(),
+      email: emailRef.current.value.trim(),
+      password: passwordRef.current.value.trim(),
+      phone: phoneRef.current.value.trim(),
       role: 0,
     };
+
     const baseUrl = process.env.REACT_APP_API_URL;
     try {
       const response = await fetch(`${baseUrl}/register`, {
@@ -88,13 +82,13 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Đã có lỗi xảy ra!");
+      toast.error("Đã có lỗi xảy ra!");
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center">
-      <div className="row justify-content-center w-100 m-5">
+      <div className="row justify-content-center w-100 m-3">
         <div className="col-md-8 col-lg-6">
           <div className="card shadow-sm rounded">
             <div className="card-header bg-success text-white text-center">
@@ -102,21 +96,46 @@ const Register = () => {
             </div>
             <div className="card-body p-4">
               <form onSubmit={submitRegister}>
-                <div className="mb-3">
-                  <label htmlFor="fullName" className="form-label">
-                    Họ và Tên
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-light">
-                      <FaUser />
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fullName"
-                      ref={fullNameRef}
-                      placeholder="Nhập Họ và Tên"
-                    />
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="fullName" className="form-label">
+                      Họ và Tên
+                    </label>
+                    <div className="input-group">
+                      <span className="input-group-text bg-light">
+                        <FaUser />
+                      </span>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="fullName"
+                        ref={fullNameRef}
+                        placeholder="Nhập Họ và Tên"
+                      />
+                    </div>
+                    {errors.fullName && (
+                      <div className="text-danger fs-6">{errors.fullName}</div>
+                    )}
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="phone" className="form-label">
+                      Số điện thoại
+                    </label>
+                    <div className="input-group">
+                      <span className="input-group-text bg-light">
+                        <FaPhone />
+                      </span>
+                      <input
+                        type="tel"
+                        className="form-control"
+                        id="phone"
+                        ref={phoneRef}
+                        placeholder="Nhập số điện thoại"
+                      />
+                    </div>
+                    {errors.phone && (
+                      <div className="text-danger fs-6">{errors.phone}</div>
+                    )}
                   </div>
                 </div>
                 <div className="mb-3">
@@ -135,23 +154,9 @@ const Register = () => {
                       placeholder="Nhập email"
                     />
                   </div>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="phone" className="form-label">
-                    Số điện thoại
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-light">
-                      <FaPhone />
-                    </span>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      id="phone"
-                      ref={phoneRef}
-                      placeholder="Nhập số điện thoại"
-                    />
-                  </div>
+                  {errors.email && (
+                    <div className="text-danger fs-6">{errors.email}</div>
+                  )}
                 </div>
                 <div className="mb-4">
                   <label htmlFor="password" className="form-label">
@@ -169,10 +174,12 @@ const Register = () => {
                       placeholder="Nhập mật khẩu"
                     />
                   </div>
+                  {errors.password && (
+                    <div className="text-danger fs-6">{errors.password}</div>
+                  )}
                 </div>
-
                 <div className="mb-4">
-                  <label htmlFor="password" className="form-label">
+                  <label htmlFor="confirmPassword" className="form-label">
                     Nhập lại mật khẩu
                   </label>
                   <div className="input-group">
@@ -182,11 +189,16 @@ const Register = () => {
                     <input
                       type="password"
                       className="form-control"
-                      id="password"
-                      ref={confirmpasswordRef}
+                      id="confirmPassword"
+                      ref={confirmPasswordRef}
                       placeholder="Nhập lại mật khẩu"
                     />
                   </div>
+                  {errors.confirmPassword && (
+                    <div className="text-danger fs-6">
+                      {errors.confirmPassword}
+                    </div>
+                  )}
                 </div>
                 <button type="submit" className="btn btn-success w-100">
                   Đăng ký
