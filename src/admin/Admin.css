@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+.admin-main-page {
+  display: flex;
+  position: relative;
+  padding-left: 0 !important;
+}
+
+.admin-app-main {
+  width: 100%;
+  background-color: #e6e6e6;
+}
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 220px;
+  padding: 10px 0px;
+  font-weight: 700;
+  border-radius: 0px 5px 5px 0px;
+  z-index: 20;
+}
+.admin-nav ul {
+  padding: 0;
+  list-style: none;
+}
+
+.admin-nav ul li {
+  padding: 15px;
+}
+
+.admin-nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: ease-in-out 0.2s all;
+}
+
+.admin-nav ul li a:hover {
+  color: #d1d1d1;
+}
+
+.admin-ico-side {
+  margin-right: 10px;
+}
+
+.admin-main-content {
+  padding-left: 240px;
+  padding-bottom: 20px;
+  min-height: 100vh;
+  margin-right: 12px;
+}
+
+.admin-main-content .title-page {
+  padding-top: 20px;
+}
+
+.admin-main-content .statistics {
+  box-sizing: border-box;
+  display: flex;
+}
+.admin-main-content .statistics a {
+  text-decoration: none;
+}
+.admin-widget-chart {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.admin-widget-chart {
+  color: #000;
+  font-size: 24px;
+  font-weight: 700;
+}
+.admin-chart {
+  padding: 15px;
+  border-radius: 10px;
+}
+/* table{
+    border: solid 1px #000;
+    border-collapse: collapse;
+}
+.admin-revenue th, td{
+    width: 200px;
+    text-align: center;
+} */
+.admin-chart h4 {
+  margin-bottom: 25px;
+}
+.admin-chart span {
+  margin-left: 180px;
+  font-weight: 700;
+}
+.admin-form-login {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.admin-form-gr {
+  padding: 15px;
+  border-radius: 10px;
+}
+.admin-addPro .form-group {
+  margin-bottom: 20px;
+}
+
+/* Đảm bảo toàn bộ trang bị phủ mờ */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+  z-index: 9999; /* Đảm bảo overlay luôn ở trên cùng */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ẩn overlay khi không có loading */
+.loading-overlay.hidden {
+  display: none;
+}
