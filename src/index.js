@@ -14,6 +14,7 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ChangePassword from "./pages/ChangePassword";
+import OrderHistory from "./pages/OrderHistory";
 
 import Admin from "./admin/Admin";
 import Catalog from "./admin/pages/Catalog";
@@ -23,6 +24,7 @@ import ProductAdd from "./admin/pages/ProductAdd";
 import ProductEdit from "./admin/pages/ProductEdit";
 import CatalogAdd from "./admin/pages/CatalogAdd";
 import CatalogEdit from "./admin/pages/CatalogEdit";
+import Order from "./admin/pages/Order";
 
 import UserInfo from "./components/UserInfo";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -54,6 +56,7 @@ root.render(
           <Route path="/register" element={<Register />}></Route>
           <Route path="/product/:id" element={<Detail />}></Route>
           <Route path="/checkout" element={<Checkout />}></Route>
+          <Route path="/orderUser" element={<OrderHistory />}></Route>
         </Route>
 
         {/* Routes cho phần admin */}
@@ -78,6 +81,7 @@ root.render(
             path="/admin/catalogEdit/:id"
             element={<CatalogEdit />}
           ></Route>
+          <Route path="/admin/order" element={<Order />}></Route>
           {/* Các route khác cho admin */}
         </Route>
       </Routes>

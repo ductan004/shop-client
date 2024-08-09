@@ -865,7 +865,9 @@ ol {
   position: relative;
 }
 
-.categories__deal__countdown .categories__deal__countdown__timer .cd-item:after {
+.categories__deal__countdown
+  .categories__deal__countdown__timer
+  .cd-item:after {
   position: absolute;
   right: 0;
   top: 7px;
@@ -875,7 +877,9 @@ ol {
   color: #3d3d3d;
 }
 
-.categories__deal__countdown .categories__deal__countdown__timer .cd-item:last-child:after {
+.categories__deal__countdown
+  .categories__deal__countdown__timer
+  .cd-item:last-child:after {
   display: none;
 }
 
@@ -1426,7 +1430,9 @@ ol {
 }
 
 .shop__sidebar__accordion .card-heading a:after,
-.shop__sidebar__accordion .card-heading > a.active[aria-expanded="false"]:after {
+.shop__sidebar__accordion
+  .card-heading
+  > a.active[aria-expanded="false"]:after {
   content: "";
   font-family: "FontAwesome";
   font-size: 24px;
@@ -2366,30 +2372,58 @@ ol {
   width: 400px;
 }
 
-.shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__pic {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.product__cart__item
+  .product__cart__item__pic {
   float: left;
   margin-right: 30px;
 }
 
-.shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__pic img {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.product__cart__item
+  .product__cart__item__pic
+  img {
   width: 60px;
   height: 60px;
   object-fit: cover;
 }
 
-.shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.product__cart__item
+  .product__cart__item__text {
   overflow: hidden;
   padding-top: 21px;
 }
 
-.shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h6 {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.product__cart__item
+  .product__cart__item__text
+  h6 {
   color: #111111;
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
-.shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h5 {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.product__cart__item
+  .product__cart__item__text
+  h5 {
   color: #0d0d0d;
   font-weight: 700;
 }
@@ -2402,7 +2436,14 @@ ol {
   width: 80px;
 }
 
-.shopping__cart__table table tbody tr td.quantity__item .quantity .pro-qty-2 input {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.quantity__item
+  .quantity
+  .pro-qty-2
+  input {
   width: 50px;
   border: none;
   text-align: center;
@@ -2410,7 +2451,14 @@ ol {
   font-size: 16px;
 }
 
-.shopping__cart__table table tbody tr td.quantity__item .quantity .pro-qty-2 .qtybtn {
+.shopping__cart__table
+  table
+  tbody
+  tr
+  td.quantity__item
+  .quantity
+  .pro-qty-2
+  .qtybtn {
   font-size: 16px;
   color: #888888;
   width: 10px;
@@ -3784,7 +3832,12 @@ ol {
   .shopping__cart__table {
     overflow-y: auto;
   }
-  .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__pic {
+  .shopping__cart__table
+    table
+    tbody
+    tr
+    td.product__cart__item
+    .product__cart__item__pic {
     float: none;
     margin-right: 0;
   }
@@ -3899,4 +3952,48 @@ ol {
 
 .card-header.changePassword h3 {
   color: #fff;
+}
+
+.order-list {
+  margin-top: 1rem;
+}
+
+.order-item {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+}
+
+.card-body {
+  background-color: #ffffff;
+}
+
+.order-details {
+  font-size: 0.875rem;
+}
+
+.order-details div {
+  margin-right: 1rem;
+  white-space: nowrap;
+}
+
+.order-details__img {
+  border-radius: 4px;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.order__link {
+  text-decoration: underline;
+  color: #007bff;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+}
+.order__link:hover {
+  opacity: 0.8;
 }

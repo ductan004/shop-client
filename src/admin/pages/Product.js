@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { PaginationControl } from "react-bootstrap-pagination-control";
 
 function Product() {
   const [products, setproducts] = useState([]);
   const [catalogs, setcatalogs] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0); // Use a key to trigger refresh
   const token = useSelector((state) => state.auth.token);
+
+  const [page, setPage] = useState(1);
+  const [totalProduct, setTotalProduct] = useState(0);
+  const [limit] = useState(10);
 
   useEffect(() => {
     const fetchProductsAndCatalogs = async () => {
@@ -20,9 +25,13 @@ function Product() {
         },
       };
       try {
-        const productsResponse = await fetch(`${baseUrl}/product`, opt);
+        const productsResponse = await fetch(
+          `${baseUrl}/product?page=${page}&limit=${limit}`,
+          opt
+        );
         const productsData = await productsResponse.json();
-        setproducts(productsData);
+        setproducts(productsData.data);
+        setTotalProduct(productsData.total);
 
         const catalogsResponse = await fetch(`${baseUrl}/catalog`, opt);
         const catalogsData = await catalogsResponse.json();
@@ -33,7 +42,7 @@ function Product() {
     };
 
     fetchProductsAndCatalogs();
-  }, [token, refreshKey]);
+  }, [token, refreshKey, page, limit]);
   const getProductCatalogName = (id_catalog) => {
     if (catalogs.length === 0) return "Không có";
     const catalog = catalogs.find((cata) => cata.id === id_catalog);
@@ -62,7 +71,10 @@ function Product() {
           .then((response) => response.json())
           .then((data) => {
             if (data.error) {
-              alert("Error: " + data.error);
+              Swal.fire({
+                title: "Sản phẩm đang được mua ở đơn hàng",
+                icon: "error",
+              });
             } else {
               Swal.fire({
                 title: "Xóa thành công!",
@@ -136,18 +148,15 @@ function Product() {
             </tr>
           ))}
         </tbody>
-        <tfoot>
-          <tr>
-            <th>#</th>
-            <th>Hình ảnh</th>
-            <th>Tên sản phẩm</th>
-            <th>Danh mục</th>
-            <th>Giá</th>
-            <th>Ngày</th>
-            <th>Hành động</th>
-          </tr>
-        </tfoot>
       </table>
+      <PaginationControl
+        page={page}
+        between={4}
+        total={totalProduct}
+        limit={limit}
+        changePage={(newPage) => setPage(newPage)}
+        ellipsis={1}
+      />
     </div>
   );
 }

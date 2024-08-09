@@ -64,10 +64,7 @@ function Login() {
       })
       .catch((error) => {
         console.error("Error:", error);
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          general: "Bạn sai tài khoản hoặc mật khẩu",
-        }));
+        toast.error("Bạn sai tài khoản hoặc mật khẩu");
       });
   };
 

@@ -2,39 +2,68 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../redux/cartSlice";
+import { PaginationControl } from "react-bootstrap-pagination-control";
+
 const Shop = () => {
-  const [catalogs, setcatalog] = useState([]);
-  const [products, setproducts] = useState([]);
+  const [catalogs, setCatalogs] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentId, setCurrentId] = useState(null);
+  const limit = 6;
+
   const dispatch = useDispatch();
   let { id } = useParams();
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCatalogs = async () => {
       const baseUrl = process.env.REACT_APP_API_URL;
       try {
-        const [catalogRes, productRes, additionalProductRes] =
-          await Promise.all([
-            fetch(`${baseUrl}/catalog`),
-            fetch(`${baseUrl}/product/9`),
-            id
-              ? fetch(`${baseUrl}/productCatalog/${id}`)
-              : Promise.resolve({ json: () => [] }),
-          ]);
-
+        const catalogRes = await fetch(`${baseUrl}/catalog`);
         const catalogData = await catalogRes.json();
-        const productData = await productRes.json();
-        const additionalProductData = id
-          ? await additionalProductRes.json()
-          : [];
-
-        setcatalog(catalogData);
-        setproducts(id ? additionalProductData : productData);
+        setCatalogs(catalogData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching catalog data:", error);
       }
     };
 
-    fetchData();
-  }, [id]);
+    fetchCatalogs();
+  }, []);
+
+  useEffect(() => {
+    if (id !== currentId) {
+      setCurrentId(id);
+      setPage(1); // Reset page về 1 khi id thay đổi
+    }
+  }, [id, currentId]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const baseUrl = process.env.REACT_APP_API_URL;
+      try {
+        let productRes;
+        if (currentId) {
+          productRes = await fetch(
+            `${baseUrl}/productCatalog/${currentId}?page=${page}&limit=${limit}`
+          );
+        } else {
+          productRes = await fetch(
+            `${baseUrl}/product?page=${page}&limit=${limit}`
+          );
+        }
+        const productData = await productRes.json();
+        setProducts(productData.data);
+        setTotalPage(productData.total);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    // Fetch products only after `page` and `currentId` are set
+    if (currentId !== null) {
+      fetchProducts();
+    }
+  }, [currentId, page]);
 
   return (
     <div>
@@ -167,15 +196,14 @@ const Shop = () => {
               </div>
               <div className="row">
                 <div className="col-lg-12">
-                  <div className="product__pagination">
-                    <a className="active" href="#!">
-                      1
-                    </a>
-                    <a href="#!">2</a>
-                    <a href="#!">3</a>
-                    <span>...</span>
-                    <a href="#!">21</a>
-                  </div>
+                  <PaginationControl
+                    page={page}
+                    between={4}
+                    total={totalPage}
+                    limit={limit}
+                    changePage={(newPage) => setPage(newPage)}
+                    ellipsis={1}
+                  />
                 </div>
               </div>
             </div>

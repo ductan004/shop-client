@@ -21,8 +21,8 @@ const Cart = () => {
               <div className="breadcrumb__text">
                 <h4>Shopping Cart</h4>
                 <div className="breadcrumb__links">
-                  <a href="./index.html">Home</a>
-                  <a href="./shop.html">Shop</a>
+                  <Link to={"/"}>Home</Link>
+                  <Link to={"/shop"}>Shop</Link>
                   <span>Shopping Cart</span>
                 </div>
               </div>

@@ -36,7 +36,7 @@ function Checkout() {
     // Tạo mã đơn hàng ngẫu nhiên
     // Tạo mã đơn hàng ngẫu nhiên
     let orderCode =
-      "dt_" +
+      "#dt_" +
       Math.floor(Math.random() * 100000)
         .toString()
         .padStart(5, "0");
@@ -47,7 +47,7 @@ function Checkout() {
       email: email,
       address: address,
       total: totalAmount,
-      status: "cho` xu ly",
+      status: "Chờ xử lí",
       code: orderCode,
     };
     const baseUrl = process.env.REACT_APP_API_URL;
@@ -89,7 +89,8 @@ function Checkout() {
       let objDetail = {
         order_id: order_id,
         product_id: pro.id,
-        product_name: pro.product_name,
+        product_name: pro.name,
+        product_img: pro.img,
         quantity: pro.quantity,
         price: pro.price_sale,
         total: total,

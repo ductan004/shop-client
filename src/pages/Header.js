@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logOut } from "../redux/authSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const [isMenuActive, setIsMenuActive] = useState(false);
@@ -18,12 +19,14 @@ function Header() {
   const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const handleLogout = () => {
     dispatch(logOut());
     setShowLogoutModal(false); // Close modal after logging out
     toast.success("Đăng xuất thành công");
+    navigate("/");
   };
 
   return (
@@ -147,6 +150,11 @@ function Header() {
                     </a>
                     {user ? (
                       <ul className="dropdown-menu">
+                        <li>
+                          <Link to={"/orderUser"} className="dropdown-item">
+                            Lịch sử mua hàng
+                          </Link>
+                        </li>
                         <li>
                           <Link
                             to={"/changePassword"}
